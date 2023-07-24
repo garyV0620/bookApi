@@ -1,0 +1,228 @@
+check https://www.cloudways.com/blog/php-libraries/
+https://www.positronx.io/build-secure-php-rest-api-in-laravel-with-sanctum-auth/ --- sample crate api
+https://packagist.org/   -- packages
+steps
+1.cd C:\xampp\htdocs
+2.mkdir phptimer  - make a project folder
+3.cd C:\xampp\htdocs\phptimer  
+4.goto to packages and serach for the package. At the top of the page, you will see which command you need to use in the terminal to download and install the package:
+5.If composer.json is change or ther version
+5.1.to update packages (composer update)all
+(composer update vendor/package vendor2/package2)by packages
+
+USEFULL COMMANDS
+-npm install - if folder move to install vite
+-composer install - if folder is move
+-composer create-project laravel/laravel="5.1.*" appName (specific version) lower versions composer create-project laravel/laravel app "5.1.*"
+-composer update vendor/package vendor2/package2
+-composer update --dry-run --profile --verbose
+-composer show -t (package info)
+-composer why package/package  -t (see who requires)
+-composer why-not laravel/framework 5.8 -t
+-composer outdated
+-composer status -v (check if any update is done)
+-composer diagnose
+-composer init (add composer.json)
+-composer remove jenssegers/mongodb (remove dependency)
+
+FOR OTHER COMMAND 
+-php artisan make:migration create_tasks_table (create tasks)
+-php artisan migrate (migrate to the DB create db and tables)
+-php artisan make:model Task (create model at app folder)
+-php artisan make:model -mrc Chirp (create model controller migration)
+-php artisan make:resource Task (create resource for format from db)
+-php artisan make:controller TaskController --resource (creat controller at app/Http/Controllers folder with template) 
+-php artisan route:list   (show all available to check also if correct web.php) 
+-php artisan make:middleware VerifyRole
+-if add new middle ware add it on kernel.php ($routeMiddleware)
+-php artisan make:migration add_paid_to_users_table --table=users
+-php artisan serve --host=0.0.0.0 --port=8080 
+-php artisan migrate:refresh --seed (refresh DB)
+-php artisan storage:link (making a link)
+-php artisan config:cache (to clear and refresh the configuration cache)
+-php artisan optimize (if web.php is change)
+-important config/database.php ('engine' => 'InnoDB',)
+-php artisan make:policy ChirpPolicy --model=Chirp (policy who can update)
+-$columns = \Schema::getColumnListing('<table_name>'); (show column)
+-$tables = \DB::select('show tables');
+
+==== to run in serve (composer install --no-dev) ====
+------ make test data -----
+php artisan make:test BasicTest (make a test)
+php artisan make:seeder UsersTableSeeder
+
+use Faker\Factory as Faker;
+$faker = Faker::create();
+$users = [];
+for ($i = 0; $i < 10; $i++) {
+    $users[] = [
+        'name' => $faker->name,
+        'email' => $faker->email,
+        'password' => bcrypt($faker->password)
+    ];
+}
+
+DB::table('users')->insert($users);
+
+php artisan make:factory ItemFactory --model=Item
+php artisan db:seed --class=UsersTableSeeder (execute)
+ DB::table('users')->delete(); (delete)
+
+php artisan migrate:refresh --seed (rollback all migration then add all seeders)
+
+--------
+- npm run dev -- --host=192.168.1.167 --port=2023
+
+*composer require laravel/breeze --dev
+*php artisan breeze:install blade
+
+DB package ---https://www.doctrine-project.org/projects/doctrine-dbal/en/latest/reference/query-builder.html#sql-query-builder
+
+https://www.itechempires.com/2016/07/laravel-5-crud-operations/ ===== TUTORIAL v5.2.31
+
+STEPS
+-create a model (php artisan make:model Company -m)
+-create controller
+-{{ route('companies.store') }} // routes/web.php (name used.function)
+
+Finally, you may need to clear the cache and rebuild the assets using the command "php artisan optimize" and "php artisan config:cache" to reflect the changes.
+php artisan route:clear
+composer require laravel/tinker
+php artisan tinker
+----------------------------------------
+to add new column or table
+1.php artisan make:migration add_paid_to_users_table --table=users
+2.public function up()
+{
+    Schema::table('users', function($table) {
+        $table->integer('paid');
+    });
+}
+public function down()
+{
+    Schema::table('users', function($table) {
+        $table->dropColumn('paid');
+    });
+}
+3.php artisan migrate
+4.use $table->integer('paid')->after('whichever_column');
+_______________________
+LARAVEL NOTES
+-$input = $request->all(); (all request inputs and put to an array)
+
+-$input = $request->collect(); (same as the above but put it to a collection)
+
+-$name = $request->input('name', 'Sally'); (if input name is not present then second parameter sally will be returned)
+
+-$name = $request->input('products.0.name');
+ 
+$names = $request->input('products.*.name'); (contains array in the input)
+
+-$name = $request->query('name');( gel input values only from the query string )
+
+-$name = $request->string('name')->trim(); (fetch stings from inputs)
+
+-$archived = $request->boolean('archived'); (from check boxes)
+
+-$elapsed = $request->date('elapsed', '!H:i', 'Europe/Madrid');(fetch dates with formats)
+
+-if ($request->has(['name', 'email'])) {
+    //
+} (check if input exist)
+
+
+-if ($request->filled('name')) {
+    //
+}(present and not empty) 
+
+if ($request->missing('name')) {
+    //
+}
+ 
+$request->whenMissing('name', function ($input) {
+    // The "name" value is missing...
+}, function () {
+    // The "name" value is present...
+});(when missing input)
+
+-$request->flash(); (can use old request)
+
+return redirect('form')->withInput();
+ 
+return redirect()->route('user.create')->withInput();
+ 
+return redirect('form')->withInput(
+    $request->except('password')
+);
+
+-$file = $request->file('photo')->path();
+ or ->extension()
+ $file = $request->photo; (retrieve files)
+$path = $request->photo->store('images');(automatic names)
+$path = $request->photo->store('images', 's3');
+$path = $request->photo->storeAs('images', 'filename.jpg');(assign name to files)
+$path = $request->photo->storeAs('images', 'filename.jpg', 's3');
+
+-return redirect()->away('https://www.google.com'); (redirect to other pages)
+
+-return response()->download($pathToFile);(download files)
+return response()->download($pathToFile, $name, $headers);
+
+-return response()->file($pathToFile); (display files)
+return response()->file($pathToFile, $headers);
+
+
+---- AGO sample
+$session->created_at->diffInDays(now())>24
+---
+$mydays->created_at->eq($chirp->updated_at) (compare the dates if equal)
+-----------WEB socket 
+composer require cboden/ratchet
+php artisan make:command WebSocketServer --command=websocket:init
+tutorials 
+--http://socketo.me/docs/hello-world
+--https://www.webslesson.info/2022/09/real-time-laravel-ratchet-websocket-chat-application.html
+-----------for react https://www.kianmusser.com/articles/react-where-put-websocket/#:~:text=Putting%20the%20Websocket%20in%20a%20hook%20works%20best%20when%20there,not%20be%20a%20good%20fit.
+-------------------------
+
+
+===============================MAKE AND API==================
+==============================================================
+Accept - application/json
+Content-Type -application/json
+
++composer create-project --prefer-dist laravel/laravel myapp
++edit .env
++php artisan make:model ModalName -m (make the model the migration file)
++edit migrate files ($table->foreginId('author_id')->constrainded('authors')->cascadeOndelete())
++php artisan migrate
++edit the Models(define the relationship) return $this->belongsToMany(Dictionary::class, 'dictionary_authors');
++php artisan make:controller Api/BaseController (edit it)(sendRespons($data,$message) and sendError($error, $errorMessage = [],$code = 404))
+
++php artisan make:resource Dictionary then edit
++php artisan make:controller Api/Dictionary --resource
++php artisan make:middleware IsValidTokken -- check $request->input('token')
++register the middleware in app/Http/Kernel.php (protected $routeMiddleware)
++edit the routes api
+
+(Route::middleware('EnsureTokenIsValid')->group(
+function(){
+Route::resource('dictionary', Dictionary::class);
+});)
+
++make new Request for input(php artisan make:request StorePostRequest)  +then edit  app/Http/Requests
++edit controller --- $word->authors()->attach([author_id]) - insert
+		 $word->authors()->sync([author_id]) - update
+
+FOR TEST DATA I EACH MODEL
+php artisan make:factory ItemFactory --model=Item
+php artisan migrate:refresh --seed (execute all seed and refreesh DB)
+php artisan db:seed --class=UsersTableSeeder (execute)
+
+===================================================================
+WHERE QUERY ON THE SECONDARY TABLE ON MANY TO MANY RELATIONSHIP WITH EAGERLOADING
+=====================================================================
+ $book = ModelsBook::with('authors')->whereHas('authors', function($query) use ($author) {
+            $query->where('name', $author);
+        })->get();
+___________________________________________________________________________
