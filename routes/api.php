@@ -21,13 +21,13 @@ use Illuminate\Support\Facades\Route;
 
 // Route::middleware('isValidToken')->resource('book', Book::class)->only(['index', 'store', 'show']);
 
-Route::middleware('isValidToken')->group(function(){
+Route::middleware('isValidToken')->group(function () {
     //added route to a resource controller
-    Route::prefix('books')->group(function(){
+    Route::prefix('books')->group(function () {
         Route::get('title/{title}', [Book::class, 'title']);
         Route::get('author/{author}', [Book::class, 'author']);
         Route::get('search/{titleOrAuthor}', [Book::class, 'search']);
     });
-   
+
     Route::resource('books', Book::class)->only(['index', 'store', 'show', 'update']);
 });

@@ -3,11 +3,11 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 
 class BaseController extends Controller
 {
-    public function sendResponse($data, $message) {
+    public function sendResponse($data, $message)
+    {
         $response = [
             'success' => true,
             'data' => $data,
@@ -17,13 +17,14 @@ class BaseController extends Controller
         return response()->json($response, 200);
     }
 
-    public function sendError($error, $errorMessages = [], $code = 404){
+    public function sendError($error, $errorMessages = [], $code = 404)
+    {
         $response = [
             'success' => false,
             'message' => $error,
         ];
 
-        if(!empty($errorMessages)){
+        if (! empty($errorMessages)) {
             $response['error'] = $errorMessages;
         }
 
