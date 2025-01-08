@@ -21,7 +21,7 @@ class Book extends JsonResource
             'year_published' => $this->year_published,
             'created_at' => $this->created_at->format('d/m/Y'),
             'updated_at' => $this->updated_at->format('d/m/Y'),
-            'authors' => $this->authors->map(function($author){
+            'authors' => $this->authors->map(function ($author) {
                 return [
                     'author_id' => $author->id,
                     'name' => $author->name,

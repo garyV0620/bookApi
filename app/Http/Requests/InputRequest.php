@@ -24,16 +24,17 @@ class InputRequest extends FormRequest
     public function rules()
     {
         return [
-            "title" => 'required',
-            "description" => 'required',
-            "year_published" => 'max:10',
-            "authors" => 'required',
+            'title' => 'required',
+            'description' => 'required',
+            'year_published' => 'max:10',
+            'authors' => 'required',
         ];
     }
+
     public function messages()
     {
         return [
-            "title.required" => 'Please enter name of book',
+            'title.required' => 'Please enter name of book',
         ];
     }
 }
